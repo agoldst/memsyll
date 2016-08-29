@@ -369,6 +369,8 @@ $for(include-before)$
 $include-before$
 $endfor$
 
+$if(custom-title)$
+$else$
 % A default title block style
 \begin{center}
 \Large%
@@ -381,6 +383,7 @@ $title$ $if(subtitle)$\\ \large $subtitle$$endif$ \\ \hrulefill
 $author$ \\
 $author-info$
 \end{flushleft}
+$endif$
 
 $if(toc)$
 {

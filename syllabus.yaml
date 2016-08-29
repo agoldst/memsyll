@@ -5,6 +5,7 @@ author: Professor X
 author-info: |
     <profx@university.edu>  
     Office Hours: Backward Deep and Abysm of Time
+custom-title: false
 mainfont: Garamond Premier Pro
 mainfontoptions:
 - Numbers=OldStyle
