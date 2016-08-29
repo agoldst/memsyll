@@ -1,0 +1,32 @@
+---
+title: Introduction to Things
+subtitle: Undergrads Love This Course
+author: Professor X  
+author-info: |
+    <profx@university.edu>  
+    Office Hours: Backward Deep and Abysm of Time
+mainfont: Garamond Premier Pro
+mainfontoptions:
+- Numbers=OldStyle
+- BoldFont=Garamond Premier Pro Semibold
+fontsize: 12pt
+titlefont: Garamond Premier Pro Display
+classoption: [oneside]
+hmargin: 1.25 in
+vmargin: 1 in
+biblatex: true
+biblatex-chicago: true
+bibliography: ../sources.bib
+bibcols: 2
+bibnote: Ask me how I feel about the textbook publishing industry.
+chicago-ellipses: true
+thanks: |
+    I thank the last five people who taught this course for their syllabuses.
+titlefont: Garamond Premier Pro Display
+headers: true
+olhead: \textsc{th101}
+ochead: University of Stuff
+orhead: Fall 2016
+ocfoot: \thepage
+orfoot: Updated \today
+...
