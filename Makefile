@@ -1,8 +1,11 @@
 ## ---- user config ----
 
+# list of other markdown files to turn into standalone PDFs
+other_mds := booklist.md
+
 # list of markdown files (in order) for the syllabus sections
 # use the default only if all .md files in alphabetical order works for you
-syllabus_md := $(filter-out README.md,$(wildcard *.md))
+syllabus_md := $(filter-out README.md $(other_mds),$(wildcard *.md))
 # syllabus configuration (normally just the one yaml file)
 syllabus_yaml := $(wildcard *.yaml)
 
@@ -55,20 +58,25 @@ LATEXMK := latexmk $(if $(xelatex),-xelatex,-pdflatex="pdflatex %O %S") \
 
 ## ---- build rules ----
 
-texs := $(patsubst $(md_dir)/%.md,$(out_dir)/%.tex,$(mds))
+syllabus_tex := $(out_dir)/$(syllabus).tex
+syllabus_pdf := $(out_dir)/$(syllabus).pdf
 
-tex := $(out_dir)/$(syllabus).tex
-pdf := $(out_dir)/$(syllabus).pdf
+texs := $(patsubst %.md,$(out_dir)/%.tex,$(other_mds))
+pdfs := $(patsubst %.md,$(out_dir)/%.pdf,$(other_mds)) $(syllabus_pdf)
 
-$(tex): $(syllabus_yaml) $(syllabus_md)
+$(syllabus_tex): $(syllabus_yaml) $(syllabus_md)
 	mkdir -p $(dir $@)
 	$(PANDOC) --template=$(PANDOC_TMPL) -o $@ $^
 
-phony_pdfs := $(if $(always_latexmk),$(pdf))
+$(texs): $(out_dir)/%.tex: %.md
+	mkdir -p $(dir $@)
+	$(PANDOC) --template=$(PANDOC_TMPL) -o $@ $<
 
-.PHONY: $(phony_pdfs) clean reallyclean
+phony_pdfs := $(if $(always_latexmk),$(pdfs))
 
-$(pdf): $(tex)
+.PHONY: $(phony_pdfs) clean reallyclean all
+
+$(pdfs): %.pdf: %.tex
 	mkdir -p $(dir $@)
 	rm -rf $(dir $@)$(temp_dir)
 	cd $(dir $<); $(LATEXMK) $(notdir $<)
@@ -78,11 +86,13 @@ $(pdf): $(tex)
 # clean up everything except final pdf
 clean:
 	rm -rf $(out_dir)/$(temp_dir)
-	rm -f $(tex)
+	rm -f $(texs) $(syllabus_tex)
 
 # clean up everything including pdfs
 reallyclean: clean
-	rm -f $(pdf)
+	rm -f $(pdfs)
 	-rmdir $(out_dir)
 
-.DEFAULT_GOAL := $(pdf)
+all: $(pdfs)
+
+.DEFAULT_GOAL := $(syllabus_pdf)
