@@ -20,10 +20,10 @@ biblatex-chicago: true
 bibliography: ../sources.bib
 bibcols: 2
 bibnote: Ask me how I feel about the textbook publishing industry.
+custom-bib: false
 chicago-ellipses: true
 thanks: |
     I thank the last five people who taught this course for their syllabuses.
-titlefont: Garamond Premier Pro Display
 headers: true
 olhead: \textsc{th101}
 ochead: University of Stuff
