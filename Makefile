@@ -6,9 +6,12 @@ other_mds := booklist.md
 schedule_md := $(wildcard *schedule.md)
 bib := sources.bib
 
+# other files to exclude from the syllabus
+EXCLUDE := README.md
+
 # list of markdown files (in order) for the syllabus sections
 # use the default only if all .md files in alphabetical order works for you
-syllabus_md := $(filter-out README.md $(other_mds),$(wildcard *.md))
+syllabus_md := $(filter-out $(EXCLUDE) $(other_mds),$(wildcard *.md))
 # syllabus configuration (normally just the one yaml file)
 syllabus_yaml := $(wildcard *.yaml)
 
@@ -88,7 +91,8 @@ $(pdfs): %.pdf: %.tex
 
 out/schedule.html: $(schedule_md) $(bib) schedule.csl
 	pandoc --filter pandoc-citeproc --bibliography $(bib) --csl schedule.csl \
-	    $< -o $@
+	    $(schedule_md) \
+	    -o $@
 
 # clean up everything except final pdf
 clean:
