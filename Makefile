@@ -3,8 +3,7 @@
 # list of other markdown files to turn into standalone PDFs
 other_mds := booklist.md
 
-schedule_md := $(wildcard *schedule.md)
-bib := sources.bib
+schedule_md := schedule-page.md 4schedule.md
 
 # other files to exclude from the syllabus
 EXCLUDE := README.md
@@ -34,11 +33,12 @@ xelatex := true
 # Extra options to pandoc (e.g. "-H mypreamble.tex")
 PANDOC_OPTIONS := --biblatex
 
-## ---- special external file ----
+## ---- special external files ----
 
 # Normally this does not need to be changed:
 # works if the template is local or in ~/.pandoc/templates
 PANDOC_TMPL := memoir-syllabus.latex
+SCHEDULE_TMPL := bib4ht.latex
 
 ## ---- subdirectories (normally, no need to change) ----
 
@@ -89,10 +89,19 @@ $(pdfs): %.pdf: %.tex
 	mv $(dir $<)$(temp_dir)/$(notdir $@) $@
 	rm -r $(dir $<)$(temp_dir)
 
-out/schedule.html: $(schedule_md) $(bib) schedule.csl
-	pandoc --filter pandoc-citeproc --bibliography $(bib) --csl schedule.csl \
-	    $(schedule_md) \
-	    -o $@
+$(out_dir)/schedule.tex: $(schedule_md) $(bib)
+	mkdir -p $(dir $@)
+	$(PANDOC) --template=$(SCHEDULE_TMPL) $(schedule_md) -o $@
+
+$(out_dir)/schedule.html: $(out_dir)/schedule.tex
+	rm -rf $(dir $@)$(temp_dir)
+	mkdir -p $(out_dir)/$(temp_dir)
+	cp -f $< $(dir $@)$(temp_dir)
+	cd $(dir $@)$(temp_dir); latexmk -pdf- -ps- -dvi $(notdir $<)
+	cd $(dir $@)$(temp_dir); htlatex $(notdir $<) \
+	    ../../bib4ht.cfg " -cunihtf -utf8" "-cvalidate"
+	pandoc $(dir $@)$(temp_dir)/$(notdir $@) -o $@
+	rm -r $(dir $@)$(temp_dir)
 
 # clean up everything except final pdf
 clean:
@@ -101,7 +110,7 @@ clean:
 
 # clean up everything including pdfs
 reallyclean: clean
-	rm -f $(pdfs)
+	rm -f $(pdfs) $(out_dir)/schedule.html
 	-rmdir $(out_dir)
 
 all: $(pdfs)
