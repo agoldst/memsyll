@@ -29,7 +29,6 @@
       <name>Andrew Goldstone</name>
       <email>andrew.goldstone@rutgers.edu</email>
     </contributor>
-    <category citation-format="note"/>
     <category field="generic-base"/>
     <summary>Chicago format with in-text short citations and bibliography, no ibid, hacked by AG</summary>
     <updated>2012-10-25T21:15:26+00:00</updated>
@@ -1164,7 +1163,7 @@
     </choose>
   </macro>
   <citation et-al-min="4" et-al-use-first="1" disambiguate-add-names="true">
-    <layout suffix="." delimiter="; ">
+    <layout delimiter="; ">
       <group delimiter=", ">
         <text macro="contributors-short"/>
         <group delimiter=" ">
