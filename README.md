@@ -6,7 +6,7 @@ The (silly) example files show how I recommend this setup be used. Markdown file
 
 This `README.md` is excluded, as are the files named in the Make variable `other_mds`. The latter is meant for separate files you wish to generate in the same way; this repository includes an example, `booklist.md`, which I use to create a handout with a list of books that students need to buy (whereas the syllabus lists everything we have to read, including material from the library's digital collection, online, etc.).
 
-Typography: the first page will set the course `title` and `subtitle` in `titlefont` over a rule, then put the `author` and `author-info` in a left-flush block. To remove this and make your own title block, set `custom-title: true`. The page headers and footers can be set with `o[lcr][head|foot]` (if `classoption: [twoside]` is given then `e[lcr][head|foot]` can be used as well).
+Typography: the first page will set the course `title` and `subtitle` in `titlefont` over a rule, then put the `course-info` in a left-flush block (note that the `author` is only used in the PDF metadata; put your name in `course-info`). To remove this and make your own title block, set `custom-title: true`. The page headers and footers can be set with `o[lcr][head|foot]` (if `classoption: [twoside]` is given then `e[lcr][head|foot]` can be used as well).
 
 This setup uses system fonts: set `mainfont`, `mainfontoptions`, and `titlefont` to the names of fonts to be used by XeLaTeX. Garamond Premier Pro is a commercial font, available as part of the Adobe [Font Folio Education Essentials](http://www.adobe.com/products/fontfolio-education-essentials.html), but of course choose anything you like.
 
