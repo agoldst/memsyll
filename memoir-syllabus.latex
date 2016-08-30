@@ -380,8 +380,7 @@ $endif$
 $title$ $if(subtitle)$\\ \large $subtitle$$endif$ \\ \hrulefill
 \end{center}
 \begin{flushleft}
-$author$ \\
-$author-info$
+$course-info$
 \end{flushleft}
 $endif$
 
