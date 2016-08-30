@@ -26,3 +26,4 @@
 
 - Second midterm. Covers everything since the first midterm.
 
+\nocite{*}
