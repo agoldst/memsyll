@@ -3,6 +3,9 @@
 # list of other markdown files to turn into standalone PDFs
 other_mds := booklist.md
 
+schedule_md := $(wildcard *schedule.md)
+bib := sources.bib
+
 # list of markdown files (in order) for the syllabus sections
 # use the default only if all .md files in alphabetical order works for you
 syllabus_md := $(filter-out README.md $(other_mds),$(wildcard *.md))
@@ -82,6 +85,10 @@ $(pdfs): %.pdf: %.tex
 	cd $(dir $<); $(LATEXMK) $(notdir $<)
 	mv $(dir $<)$(temp_dir)/$(notdir $@) $@
 	rm -r $(dir $<)$(temp_dir)
+
+out/schedule.html: $(schedule_md) $(bib) schedule.csl
+	pandoc --filter pandoc-citeproc --bibliography $(bib) --csl schedule.csl \
+	    $< -o $@
 
 # clean up everything except final pdf
 clean:
