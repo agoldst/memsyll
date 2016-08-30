@@ -403,19 +403,8 @@ $endif$
 
 $body$
 
-$if(natbib)$
-$if(bibliography)$
-$if(biblio-title)$
-$if(book-class)$
-\renewcommand\bibname{$biblio-title$}
+$if(custom-bib)$
 $else$
-\renewcommand\refname{$biblio-title$}
-$endif$
-$endif$
-\bibliography{$for(bibliography)$$bibliography$$sep$,$endfor$}
-
-$endif$
-$endif$
 $if(biblatex)$
 $if(bibcols)$
 \begin{multicols}{$bibcols$}[%
@@ -427,6 +416,7 @@ $else$
 \section{$if(biblio-title)$$biblio-title$$else$readings$endif$}
 $if(bibnote)$\bibfont $bibnote$$endif$
 \printbibliography[heading=none]
+$endif$
 $endif$
 $endif$
 
