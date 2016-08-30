@@ -139,10 +139,10 @@ $if(clearbib)$
 \AtEveryBibitem{%
     $for(clearbib)$\clearfield{$clearbib$}$endfor$%
 }
+$endif$
 % Make it hard for biblatex to break a line between G. and V. in G. V.
 \setcounter{highnamepenalty}{2000}
 \renewrobustcmd*{\bibinitdelim}{\addnbthinspace}
-$endif$
 $endif$
 
 $if(bibliography)$
