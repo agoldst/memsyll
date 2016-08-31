@@ -6,7 +6,7 @@ other_mds := booklist.md
 schedule_md := schedule-page.md 4schedule.md
 
 # other files to exclude from the syllabus
-EXCLUDE := README.md
+EXCLUDE := README.md schedule-page.md
 
 # list of markdown files (in order) for the syllabus sections
 # use the default only if all .md files in alphabetical order works for you
@@ -39,6 +39,8 @@ PANDOC_OPTIONS := --biblatex
 # works if the template is local or in ~/.pandoc/templates
 PANDOC_TMPL := memoir-syllabus.latex
 SCHEDULE_TMPL := bib4ht.latex
+
+CLEAN4HT := ./clean4ht
 
 ## ---- subdirectories (normally, no need to change) ----
 
@@ -100,7 +102,7 @@ $(out_dir)/schedule.html: $(out_dir)/schedule.tex
 	cd $(dir $@)$(temp_dir); latexmk -pdf- -ps- -dvi $(notdir $<)
 	cd $(dir $@)$(temp_dir); htlatex $(notdir $<) \
 	    ../../bib4ht.cfg " -cunihtf -utf8" "-cvalidate"
-	pandoc $(dir $@)$(temp_dir)/$(notdir $@) -o $@
+	pandoc --filter $(CLEAN4HT) $(dir $@)$(temp_dir)/$(notdir $@) -o $@
 	rm -r $(dir $@)$(temp_dir)
 
 # clean up everything except final pdf
