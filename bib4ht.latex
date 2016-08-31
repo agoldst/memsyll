@@ -10,7 +10,7 @@ $if(biblatexoptions)$
 \usepackage[$for(biblatexoptions)$$biblatexoptions$$sep$,$endfor$]{biblatex-chicago}
 $else$
 % default biblatex-chicago options
-\usepackage[notes,noibid,annotation,short,backend=biber]{biblatex-chicago}
+\usepackage[notes,noibid,annotation,short,hyperref=false,backend=biber]{biblatex-chicago}
 $endif$
 $else$
 \usepackage$if(biblio-style)$[style=$biblio-style$]$endif${biblatex}
