@@ -102,7 +102,8 @@ $(out_dir)/schedule.html: $(out_dir)/schedule.tex
 	cp -f $< $(dir $@)$(temp_dir)
 	cd $(dir $@)$(temp_dir); latexmk -pdf- -ps- -dvi $(notdir $<)
 	cd $(dir $@)$(temp_dir); htlatex $(notdir $<) \
-	    ../../bib4ht.cfg " -cunihtf -utf8" "-cvalidate"
+	    ../../bib4ht.cfg " -cunihtf -utf8" "-cvalidate" \
+	    $(if $(latex_quiet),> /dev/null)
 	pandoc --filter $(CLEAN4HT) $(dir $@)$(temp_dir)/$(notdir $@) -o $@
 	rm -r $(dir $@)$(temp_dir)
 
