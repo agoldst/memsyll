@@ -40,7 +40,8 @@ PANDOC_OPTIONS := --biblatex
 PANDOC_TMPL := memoir-syllabus.latex
 SCHEDULE_TMPL := bib4ht.latex
 
-CLEAN4HT := ./clean4ht
+# clean4ht can come from the local directory or be installed somewhere in the PATH
+CLEAN4HT = $(shell which clean4ht || echo ./clean4ht)
 
 ## ---- subdirectories (normally, no need to change) ----
 
@@ -82,7 +83,7 @@ $(texs): $(out_dir)/%.tex: %.md
 
 phony_pdfs := $(if $(always_latexmk),$(pdfs))
 
-.PHONY: $(phony_pdfs) clean reallyclean all
+.PHONY: $(phony_pdfs) clean reallyclean all schedule
 
 $(pdfs): %.pdf: %.tex
 	mkdir -p $(dir $@)
@@ -104,6 +105,9 @@ $(out_dir)/schedule.html: $(out_dir)/schedule.tex
 	    ../../bib4ht.cfg " -cunihtf -utf8" "-cvalidate"
 	pandoc --filter $(CLEAN4HT) $(dir $@)$(temp_dir)/$(notdir $@) -o $@
 	rm -r $(dir $@)$(temp_dir)
+
+schedule: $(out_dir)/schedule.html
+	pbcopy < $<
 
 # clean up everything except final pdf
 clean:
