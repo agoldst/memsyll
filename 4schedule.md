@@ -7,7 +7,7 @@
 
 ## September 12
 
-- [@barnes:nightwood], 1--80.
+- [@barnes:nightwood, 1--80].
 
 ## September 16
 
@@ -17,6 +17,7 @@
 ## September 19
 
 - [@casanova:world], pt. 1.
+- [@zwerdling:dalloway].
 
 ## September 23
 
