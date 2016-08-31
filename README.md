@@ -1,10 +1,18 @@
 # A pandoc template for typesetting a course syllabus
 
-This repository gives a setup for generating a syllabus in PDF from source files in markdown (pandoc's variant) and a bibliographic database in biblatex format. The typesetting and layout are governed by the supplied pandoc template, which has some options that can be tweaked via template variables. The PDF generation process is automated with the included Makefile. This simply joins together almost all `.md`  and `.yaml` files in the directory and generates `out/syllabus.pdf`.
+This repository gives a setup for generating a syllabus in PDF from source files in markdown (pandoc's variant) and a bibliographic database in biblatex format. The typesetting and layout are governed by the supplied pandoc template, which has some options that can be tweaked via template variables. The PDF generation process is automated with the included Makefile. `make` will join together almost all `.md`  and `.yaml` files in the directory and generate `out/syllabus.pdf`.
 
 The (silly) example files show how I recommend this setup be used. Markdown files are concatenated in alphabetical order, so if you are using multiple files I suggest putting numbers at start of their names (as here). You can of course have just the one markdown file if you prefer. `syllabus.yaml` includes some metadata as well as a number of template variables for adjusting the appearance of the PDF.
 
 This `README.md` is excluded, as are the files named in the Make variable `other_mds`. The latter is meant for separate files you wish to generate in the same way; this repository includes an example, `booklist.md`, which I use to create a handout with a list of books that students need to buy (whereas the syllabus lists everything we have to read, including material from the library's digital collection, online, etc.).
+
+Finally, I always want a web-friendly version of the reading schedule and bibliography portion of the syllabus as well. After many frustrating attempts with CSL, I have given up and returned to an old workflow for accomplishing this task using the venerable tex4ht. It is as clean as I can make it, but still requires the following files: [bib4ht.cfg](bib4ht.cfg), [bib4ht.latex](bib4ht.latex), a file with a few yaml flags ([schedule-page.md](schedule-page.md)), and a [python script](clean4ht). `make out/schedule.html` generates the file. I paste this into wordpress, so `make schedule` generates the file and copies it to the MacOS X clipboard. If you wish to turn some other part of the syllabus into HTML, or the whole of it, some small modifications to the Makefile will be necessary.
+
+## Installation
+
+Clone the repository. The two `.latex` template files can stay in the folder with the syllabus or be moved to `~/.pandoc/templates`. The [clean4ht](clean4ht) python script can stay local or go anywhere in the PATH. It requires that the [pandocfilters](https://pypi.python.org/pypi/pandocfilters) module be installed: `pip install pandocfilters`.
+
+## More details on settings and options
 
 Typography: the first page will set the course `title` and `subtitle` in `titlefont` over a rule, then put the `course-info` in a left-flush block (note that the `author` is only used in the PDF metadata; put your name in `course-info`). To remove this and make your own title block, set `custom-title: true`. The page headers and footers can be set with `o[lcr][head|foot]` (if `classoption: [twoside]` is given then `e[lcr][head|foot]` can be used as well).
 
