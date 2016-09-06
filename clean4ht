@@ -6,8 +6,8 @@ def deflists(key, value, format, meta):
     if key == 'DefinitionList':
         return BulletList([[b for d in defs for b in d] for [t, defs] in value])
     elif key == 'Header':
-        # 1st and 2nd level headers just become Paras automatically
-        return Header(value[0] - 2, value[1], value[2])
+        # 1st level headers just become Paras automatically
+        return Header(value[0] - 1, value[1], value[2])
 
 if __name__ == "__main__":
     toJSONFilter(deflists)
