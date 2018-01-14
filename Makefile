@@ -69,8 +69,9 @@ out_dir := out
 
 # Change these only to really change the behavior of the whole setup
 
-PANDOC := pandoc $(if $(xelatex),--latex-engine xelatex) \
-    $(PANDOC_OPTIONS)
+pandoc2 := `pandoc -v | head -1 | grep '^pandoc 2'`
+pandoc_xelatex := $(if $(xelatex),$(if $(pandoc2),--pdf-engine,--latex-engine) xelatex)
+PANDOC := pandoc $(pandoc_xelatex) $(PANDOC_OPTIONS)
 
 LATEXMK := latexmk $(if $(xelatex),-xelatex,-pdflatex="pdflatex %O %S") \
     -pdf -dvi- -ps- $(if $(latex_quiet),-silent,-verbose) \
