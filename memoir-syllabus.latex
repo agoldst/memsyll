@@ -365,6 +365,8 @@ $for(header-includes)$
 $header-includes$
 $endfor$
 
+$preamble$
+
 \begin{document}
 
 $for(include-before)$
