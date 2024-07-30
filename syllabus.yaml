@@ -18,17 +18,17 @@ hmargin: 1.25 in
 vmargin: 1 in
 biblatex: true
 biblatex-chicago: true
+biblatexoptions: [notes, noibid, short, annotation, backend=biber, bibannotesep=period]
 bibliography: ../sources.bib
 bibcols: 2
-bibnote: Ask me how I feel about the textbook publishing industry.
-custom-bib: false
+custom-bib: true
 chicago-ellipses: true
 thanks: |
     I thank the last five people who taught this course for their syllabuses.
 headers: true
 olhead: \textsc{th101}
 ochead: University of Stuff
-orhead: Fall 2016
+orhead: Fall 2016 oops 2024
 ocfoot: \thepage
 orfoot: Updated \today
 ...

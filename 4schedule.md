@@ -27,3 +27,6 @@
 
 - Second midterm. Covers everything since the first midterm.
 
+## October 3
+
+- [@anand:untouchable]. This one's a good one.
