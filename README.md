@@ -6,13 +6,18 @@ The (silly) example files show how I recommend this setup be used. Markdown file
 
 This `README.md` is excluded, as are the files named in the Make variable `other_mds`. The latter is meant for separate files you wish to generate in the same way; this repository includes an example, `booklist.md`, which I use to create a handout with a list of books that students need to buy (whereas the syllabus lists everything we have to read, including material from the library's digital collection, online, etc.).
 
-Finally, I always want a web-friendly version of the reading schedule and bibliography portion of the syllabus as well. After many frustrating attempts with CSL, I have given up and returned to an old workflow for accomplishing this task using the venerable tex4ht. It is as clean as I can make it, but still requires the following files: [bib4ht.cfg](bib4ht.cfg), [bib4ht.latex](bib4ht.latex), a file with a few yaml flags ([schedule-page.md](schedule-page.md)), and a [python script](clean4ht). `make out/schedule.html` generates the file. I paste this into wordpress, so `make schedule` generates the file and copies it to the MacOS X clipboard. If you wish to turn some other part of the syllabus into HTML, or the whole of it, edit the `html_md` variable in the Makefile to be the list of markdown files you wish to include. The name "schedule" is determined by the value of the `web` variable (which can be changed).
 
 In order not to clutter up the main directory with TeX's many auxiliary files, outputs go in an `out` subdirectory. These files are removed if generation is successful. If it is not and you wish to examine errors, try `make latex_quiet=""` which ensures verbose output from TeX.
 
+## HTML version
+
+I always want a web-friendly version of the reading schedule and bibliography portion of the syllabus as well. Working from markdown should make that simple enough, but pandoc and CSL run into endless trouble with a biblatex bibliography of any complexity. For a long time I relied on some complicated kludges using the venerable tex4t and a custom python script, [clean4ht](clean4ht) relying on the [pandocfilters](https://pypi.python.org/pypi/pandocfilters) python module. I'm leaving these around the repository though I can't imagine anyone has ever used them.
+
+As for me, I've given up. I hand-create a webpage and manually update it when I update the syllabus. 
+
 ## Installation
 
-Clone the repository. The two `.latex` template files can stay in the folder with the syllabus or be moved to `~/.pandoc/templates`. The [clean4ht](clean4ht) python script can stay local or go anywhere in the PATH. It requires that the [pandocfilters](https://pypi.python.org/pypi/pandocfilters) module be installed: `pip install pandocfilters`.
+Clone the repository. The two `.latex` template files can stay in the folder with the syllabus or be moved to `~/.pandoc/templates`. 
 
 ## More details on settings and options
 
@@ -27,10 +32,10 @@ In return for this quirky setup, all intermediate latex, biblatex, etc. outputs 
 
 All cited sources appear as a list of "Readings" at the end of the syllabus. If `bibcols: 2` is given, then readings are printed as two columns of small type. To reject all this and do the printing and formatting of the bibliography yourself (e.g. if you want it in sections), set `custom-bib: true`. To cite sources in e.g. a schedule of assigned reading, I suggest using pandoc's syntax, `[@casanova:world, 1–40].`. This is what I have done in [the sample schedule](4schedule.md). This will generate short citations (that are also clickable links to the bibliography). One can also use biblatex citation commands directly.
 
-Put `\nocite{*}` somewhere in the markdown if you want everything in your bibliography file to appear in the list of readings (I regularly do this because I often list alternative texts).
+Put `\nocite{*}` somewhere in the markdown if you want everything in your bibliography file to appear in the list of readings.
 
 As the sample schedule file shows, unnumbered lists are also configured without bullet points, because the 1990s are over.
 
 If template field `thanks` is set, is appears under the heading "Acknowledgments" after the list of Readings.
 
-This repository is based on my more general [memarticle](https://github.com/agoldst/memarticle) pandoc/latex template. It simplifies (somewhat) my older, more chaotic [tex/syllabus](https://github.com/agoldst/tex/syllabus) setup.
+This repository is based on my more general [memarticle](https://github.com/agoldst/memarticle) pandoc/latex template. One disadvantage of using custom pandoc templates is that pandoc's latex output assumes all kinds of things will be set up as in the default latex template. If pandoc changes its default templates, mine fall out of sync until I notice and fix it. 
