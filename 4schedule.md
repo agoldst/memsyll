@@ -11,12 +11,12 @@
 
 ## September 16
 
-- [@burger:theory], complete.
-- [@barnes:nightwood], complete.
+- [@burger:theory, complete].
+- [@barnes:nightwood, complete].
 
 ## September 19
 
-- [@casanova:world], pt. 1.
+- [@casanova:world, pt. 1].
 - [@zwerdling:dalloway].
 
 ## September 23
