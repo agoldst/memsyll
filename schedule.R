@@ -11,7 +11,7 @@ c(start1 + weeks(0:14), start2 + weeks(0:14)) |>
     keep(\(d) d < recess | d > recess + weeks(1)) |>
     stamp("## Monday, September 1.")() |>
     sort() |>
-    str_replace(' 0(\\d)', ' \\1') |> # remove unavoidable 0-padding of day no.
+    str_replace(' 0', '') |> # remove unavoidable 0-padding of day no.
     paste(collapse="\n\n") |>
     write_clip() # NB manually insert spring recess
 
