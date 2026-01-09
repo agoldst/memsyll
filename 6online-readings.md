@@ -1,5 +1,5 @@
 \begin{multicols}{2}[%
-    \section{Other readings available via Canvas}
+    \section{Digital readings}
 ]
 \bibfont
 \printbibliography[heading=none,notkeyword=bookstore]

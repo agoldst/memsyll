@@ -38,3 +38,7 @@ Stand, and unfold thyself.
 ## Long paper
 
 A deep dive into the syllabus.
+
+## AI policy
+
+No.
