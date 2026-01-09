@@ -1,66 +1,64 @@
-\documentclass[article,%
-$if(fontsize)$$fontsize$,$else$12pt,$endif$%
-$if(papersize)$$papersize$paper,$else$letterpaper,$endif$%
-$for(classoption)$$classoption$$sep$,$endfor$]{memoir}
-
-$if(fontfamily)$
-\usepackage[$for(fontfamilyoptions)$$fontfamilyoptions$$sep$,$endfor$]{$fontfamily$}
+% This template based on default.latex in pandoc 3.8.3
+$passoptions.latex()$
+\documentclass[
+$for(babel-otherlangs)$
+  $babel-otherlangs$,
+$endfor$
+$if(babel-lang)$
+  $babel-lang$,
+$endif$
+$if(fontsize)$
+  $fontsize$,
+$endif$
+$if(papersize)$
+  $papersize$paper,
+$endif$
+$for(classoption)$
+  $classoption$$sep$,
+$endfor$
+]{$documentclass$}
+$if(beamerarticle)$
+\usepackage{beamerarticle} % needs to be loaded first
+$endif$
+\usepackage{xcolor}
+$if(geometry)$
+\usepackage[$for(geometry)$$geometry$$sep$,$endfor$]{geometry}
+$endif$
+\usepackage{amsmath,amssymb}
+$if(cancel)$
+\usepackage{cancel}
+$endif$
+$--
+$-- section numbering
+$--
+$if(numbersections)$
+\setcounter{secnumdepth}{$if(secnumdepth)$$secnumdepth$$else$5$endif$}
 $else$
-\usepackage{lmodern}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
 $endif$
-$if(linestretch)$
-\usepackage{setspace}
-\setstretch{$linestretch$}
-$endif$
-\usepackage{amssymb,amsmath}
-\usepackage{iftex}
-\ifPDFTeX
-  \usepackage[$if(fontenc)$$fontenc$$else$T1$endif$]{fontenc}
-  \usepackage[utf8]{inputenc}
-  \usepackage{textcomp} % provide euro and other symbols
-\else % if luatex or xetex
-$if(mathspec)$
-  \ifXeTeX
-    \usepackage{mathspec} % this also loads fontspec
-  \else
-    \usepackage{unicode-math} % this also loads fontspec
-  \fi
-$else$
-  \usepackage{unicode-math} % this also loads fontspec
-$endif$
+$fonts.latex()$
+$font-settings.latex()$
+$common.latex()$
+$for(header-includes)$
+$header-includes$
+$endfor$
+$after-header-includes.latex()$
+$hypersetup.latex()$
+$if(pdf-trailer-id)$
 
-\defaultfontfeatures{Scale=MatchLowercase}
-\defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
-
-$if(mainfont)$
-    \setmainfont[$for(mainfontoptions)$$mainfontoptions$$sep$,$endfor$]{$mainfont$}
-$endif$
-$if(sansfont)$
-    \setsansfont[$for(sansfontoptions)$$sansfontoptions$$sep$,$endfor$]{$sansfont$}
-$endif$
-$if(monofont)$
-    \setmonofont[Mapping=tex-ansi$if(monofontoptions)$,$for(monofontoptions)$$monofontoptions$$sep$,$endfor$$endif$]{$monofont$}
-$endif$
-$if(mathfont)$
-    \setmathfont(Digits,Latin,Greek)[$for(mathfontoptions)$$mathfontoptions$$sep$,$endfor$]{$mathfont$}
-$endif$
-$if(CJKmainfont)$
-    \usepackage{xeCJK}
-    \setCJKmainfont[$for(CJKoptions)$$CJKoptions$$sep$,$endfor$]{$CJKmainfont$}
-$endif$
+\ifXeTeX
+\special{pdf:trailerid [ $pdf-trailer-id$ ]}
 \fi
+\ifPDFTeX
+\pdftrailerid{}
+\pdftrailer{/ID [ $pdf-trailer-id$ ]}
+\fi
+\ifLuaTeX
+\pdfvariable trailerid {[ $pdf-trailer-id$ ]}
+\fi
+$endif$
 
-% use upquote if available, for straight quotes in verbatim environments
-\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
-% use microtype if available
-\IfFileExists{microtype.sty}{%
-\usepackage{microtype}
-\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
-}{}
-
-
-% Use default memoir page layout
-% (alternative:)
+% Customize margins via memoir commands
 $if(hmargin)$
 \setlrmarginsandblock{$hmargin$}{$hmargin$}{*}
 $endif$
@@ -68,123 +66,44 @@ $if(vmargin)$
 \setulmarginsandblock{$vmargin$}{$vmargin$}{*}
 $endif$
 \checkandfixthelayout[lines]
-\fixpdflayout
-
-\usepackage{hyperref}
-$if(colorlinks)$
-\PassOptionsToPackage{usenames,dvipsnames}{color} % color is loaded by hyperref
-$endif$
-\hypersetup{unicode=true,
-$if(title)$
-            pdftitle={$title$},
-$endif$
-$if(author)$
-            pdfauthor={$author$},
-$endif$
-$if(keywords)$
-            pdfkeywords={$for(keywords)$$keywords$$sep$; $endfor$},
-$endif$
-$if(colorlinks)$
-            colorlinks=true,
-            linkcolor=$if(linkcolor)$$linkcolor$$else$Maroon$endif$,
-            citecolor=$if(citecolor)$$citecolor$$else$Blue$endif$,
-            urlcolor=$if(urlcolor)$$urlcolor$$else$Blue$endif$,
-$else$
-            pdfborder={0 0 0},
-$endif$
-            breaklinks=true}
-
-\urlstyle{$if(urlstyle)$$urlstyle$$else$same$endif$}
 
 % un-numbered lists have no markers, just indents
 \usepackage{enumitem}
-\setlist[itemize]{nosep,label={},labelindent=1em}
-\providecommand{\tightlist}{\relax}
-      
-$if(natbib)$
-\usepackage{natbib}
-\bibliographystyle{$if(biblio-style)$$biblio-style$$else$plainnat$endif$}
-$endif$
+\setlist{leftmargin=*,nosep}
+\setlist[itemize]{nosep,label=-}
 
-$if(biblatex)$
 $if(biblatex-chicago)$
-$if(biblatexoptions)$
+
 \usepackage[$for(biblatexoptions)$$biblatexoptions$$sep$,$endfor$]{biblatex-chicago}
-$else$
-% default biblatex-chicago options
-\usepackage[notes,noibid,annotation,short,backend=biber]{biblatex-chicago}
-$endif$
-$else$
-\usepackage$if(biblio-style)$[style=$biblio-style$]$endif${biblatex}
-$if(biblatexoptions)$\ExecuteBibliographyOptions{$for(biblatexoptions)$$biblatexoptions$$sep$,$endfor$}$endif$
-$endif$
+    
+$for(bibliography)$
+\addbibresource{$bibliography$}
+$endfor$
+
 \DeclareFieldFormat{annotation}{#1\isdot}
 % autocite is just a plain \cite
 \DeclareAutoCiteCommand{footnote}{\cite}{\cites}
 % and textcite (generated by pandoc) is too
 \let\textcite=\autocite
 \renewcommand{\bibfont}{$if(bibfont)$$bibfont$$else$\footnotesize$endif$}
+
 $if(clearbib)$
 \AtEveryBibitem{%
     $for(clearbib)$\clearfield{$clearbib$}$endfor$%
 }
 $endif$
+
 % Make it hard for biblatex to break a line between G. and V. in G. V.
 \setcounter{highnamepenalty}{2000}
 \renewrobustcmd*{\bibinitdelim}{\addnbthinspace}
+
+\usepackage{xstring,nameref}
+$if(bibcols)$
+\usepackage{multicol}
 $endif$
 
-$if(bibliography)$
-\bibliography{$bibliography$}
-$endif$
+$endif$ $-- if(biblatex-chicago)
 
-$if(listings)$
-\usepackage{listings}
-$endif$
-$if(lhs)$
-\lstnewenvironment{code}{\lstset{language=Haskell,basicstyle=\small\ttfamily}}{}
-$endif$
-$if(highlighting-macros)$
-$highlighting-macros$
-% tweak code highlighting environment used by pandoc
-$if(highlighting-options)$
-\RecustomVerbatimEnvironment{Highlighting}{Verbatim}{%
-    commandchars=\\\{\},%
-    $for(highlighting-options)$$highlighting-options$$sep$,$endfor$}
-$else$
-\RecustomVerbatimEnvironment{Highlighting}{Verbatim}{%
-    commandchars=\\\{\},fontsize=\small}
-$endif$
-$endif$
-
-$if(graphics)$
-\usepackage{graphicx}
-\makeatletter
-\newsavebox\pandoc@box
-\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
-  \sbox\pandoc@box{#1}%
-  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
-  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
-  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
-  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
-  \else\usebox{\pandoc@box}%
-  \fi%
-}
-% Set default figure placement to htbp
-\def\fps@figure{htbp}
-\makeatother
-\usepackage[multidot]{grffile} % handle image file names like img.2.pdf
-$endif$
-
-$if(links-as-notes)$
-% Make links footnotes instead of hotlinks:
-\renewcommand{\href}[2]{#2\footnote{\url{#1}}}
-$endif$
-$if(strikeout)$
-\usepackage[normalem]{ulem}
-% avoid problems with \sout in headers with hyperref:
-\pdfstringdefDisableCommands{\renewcommand{\sout}{}}
-$endif$
 
 % blank space between paragraphs rather than indents
 \setlength{\parindent}{0 pt}
@@ -200,97 +119,8 @@ $else$
 $endif$
 
 $if(chicago-ellipses)$
-% Chicago ellipses. The lips package conflicts with many modern LaTeX packages
-% but provides the only good implementation of this I could find. I
-% simply copy over the code here, condensing it slightly. The original
-% lips package is copyright 1995-2001 Matt Swift <swift@alum.mit.edu> and
-% distributed under the LaTeX Project Public License 1.2.
-\makeatletter
-\newcommand*\Lips {}
-\let\Lips\relax
-\DeclareRobustCommand\Lips {%
-  \ifvmode \def\sc@t@a {%
-      \leavevmode
-      .\nobreak\ .\nobreak\ .\nobreak\ %
-    }%
-  \else
-    \let\sc@t@a\lp@lips@hmode
-  \fi
-  \sc@t@a
-}
-\newcommand\lp@lips@hmode {%
-  \unskip
-  \@ifnextchar . {%
-      .\penalty9999\ .\nobreak\ .\nobreak\ .\ %
-      \GobbleIgnoreSpaces
-    }{% ELSE
-    \penalty9999\ .\nobreak\ .\nobreak\ .%
-    \futurelet\sc@t@a\lp@lips@check@punct
-  }%
-}
-\newcommand\GobbleIgnoreSpaces [1] {%
-  \ignorespaces
-}
-\newcommand*\lp@bang {}
-\newcommand*\lp@rparen {}
-\newcommand*\lp@comma {}
-\newcommand*\lp@slash {}
-\newcommand*\lp@colon {}
-\newcommand*\lp@semic {}
-\newcommand*\lp@q {}
-\newcommand*\lp@rbrack {}
-\newcommand*\lp@rquote {}
-\newcommand*\lp@tilde {}
-
-\let\lp@bang=!
-\let\lp@rparen=)
-\let\lp@comma=,
-\let\lp@slash=/
-\let\lp@colon=:
-\let\lp@semic=;
-\let\lp@q=?
-\let\lp@rbrack=]
-\let\lp@rquote='
-\let\lp@tilde=~
-\newcommand \LPNobreakList {%
-  \lp@comma \lp@colon  \lp@semic
-  \lp@q \lp@bang
-  \lp@rparen \lp@rquote \lp@rbrack \egroup
-  \lp@slash
-}
-\newcommand\lp@lips@check@punct {%
-  \ifx\sc@t@a\lp@tilde
-  \else
-    \@tempswatrue
-    \let\@fortmp\PunctList
-    \expandafter\@tforloop\LPNobreakList\@nil\@nil\@@\reserved@a {%
-      \ifx\sc@t@a\reserved@a
-	\@tempswafalse
-	\@break@tfor
-      \fi
-     }%
-    \if@tempswa
-      \ %
-    \else
-      \nobreak\ %
-    \fi
-  \fi
-}
-\makeatother
-\let\ldots=\Lips
+$lips.latex()$
 $endif$
-
-$if(tables)$
-% packages required for tables generated by pandoc
-\usepackage{longtable,booktabs,array,calc}
-$if(multirow)$
-\usepackage{multirow}
-$endif$
-$endif$
-    
-% Chicago footnotes
-\footmarkstyle{#1.~}
-\setlength{\footparindent}{1em}
 
 % Section styling
 \setsecheadstyle{\large\scshape\raggedright\MakeLowercase}
@@ -299,31 +129,7 @@ $endif$
 \setsubsubsecheadstyle{\itshape\periodafter}
 \setaftersubsubsecskip{-1 em}
 
-$if(numbersections)$
-\setcounter{secnumdepth}{5}
-$else$
-\setcounter{secnumdepth}{-2}
-$endif$
-$if(subparagraph)$
-$else$
-% Redefines (sub)paragraphs to behave more like sections
-\ifx\paragraph\undefined\else
-\let\oldparagraph\paragraph
-\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
-\fi
-\ifx\subparagraph\undefined\else
-\let\oldsubparagraph\subparagraph
-\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
-\fi
-$endif$
-
-$if(caption)$
-% caption styling
-\usepackage[$for(caption)$$caption$$sep$,$endfor$]{caption}
-$endif$
-
 $if(headers)$
-% section headers
 \makeoddhead{plain}%
     {\small $olhead$}%
     {\small $ochead$}%
@@ -342,95 +148,107 @@ $if(headers)$
     {\small $erfoot$}
 $endif$
 
-$if(bibcols)$
-\usepackage{multicol}
+
+$if(subtitle)$
+\usepackage{etoolbox}
+\makeatletter
+\providecommand{\subtitle}[1]{% add subtitle to \maketitle
+  \apptocmd{\@title}{\par {\large #1 \par}}{}{}
+}
+\makeatother
+\subtitle{$subtitle$}
 $endif$
-
-$if(dir)$
-\ifxetex
-  % load bidi as late as possible as it modifies e.g. graphicx
-  $if(latex-dir-rtl)$
-  \usepackage[RTLdocument]{bidi}
-  $else$
-  \usepackage{bidi}
-  $endif$
-\fi
-\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
-  \TeXXeTstate=1
-  \newcommand{\RL}[1]{\beginR #1\endR}
-  \newcommand{\LR}[1]{\beginL #1\endL}
-  \newenvironment{RTL}{\beginR}{\endR}
-  \newenvironment{LTR}{\beginL}{\endL}
-\fi
-$endif$
-
-$for(header-includes)$
-$header-includes$
-$endfor$
-
-$preamble$
+\author{$for(author)$$author$$sep$ \and $endfor$}
+\date{$date$}
 
 \begin{document}
 
+$if(title)$
+    $if(custom-title)$
+    $else$
+    % A default title block style
+    \begin{center}
+    \Large%
+        $if(titlefont)$
+        \fontspec[$for(titlefontoptions)$$titlefontoptions$$sep$,$endfor$]{$titlefont$}%
+        $endif$
+    $title$ $if(subtitle)$\\ \large $subtitle$$endif$ \\ \hrulefill
+    \end{center}
+    \begin{flushleft}
+    $course-info$
+    \end{flushleft}
+    $endif$
+$endif$ $-- if(title)
+
+$if(abstract)$
+\begin{abstract}
+$abstract$
+\end{abstract}
+$endif$
+
 $for(include-before)$
 $include-before$
+
 $endfor$
-
-$if(custom-title)$
-$else$
-% A default title block style
-\begin{center}
-\Large%
-$if(titlefont)$
-    \fontspec[$for(titlefontoptions)$$titlefontoptions$$sep$,$endfor$]{$titlefont$}%
-$endif$
-$title$ $if(subtitle)$\\ \large $subtitle$$endif$ \\ \hrulefill
-\end{center}
-\begin{flushleft}
-$course-info$
-\end{flushleft}
-$endif$
-
 $if(toc)$
+$if(toc-title)$
+\renewcommand*\contentsname{$toc-title$}
+$endif$
 {
 $if(colorlinks)$
-\hypersetup{linkcolor=$if(toccolor)$$toccolor$$else$black$endif$}
+$if(toccolor)$
+\hypersetup{linkcolor=$toccolor$}
+$endif$
 $endif$
 \setcounter{tocdepth}{$toc-depth$}
 \tableofcontents
 }
 $endif$
-$if(lot)$
-\listoftables
-$endif$
 $if(lof)$
 \listoffigures
 $endif$
-
+$if(lot)$
+\listoftables
+$endif$
+$if(linestretch)$
+\setstretch{$linestretch$}
+$endif$
 $body$
+
+$if(natbib)$
+$if(bibliography)$
+$if(biblio-title)$
+$if(has-chapters)$
+\renewcommand\bibname{$biblio-title$}
+$else$
+\renewcommand\refname{$biblio-title$}
+$endif$
+$endif$
+\bibliography{$for(bibliography)$$bibliography$$sep$,$endfor$}
+
+$endif$
+$endif$
 
 $if(custom-bib)$
 $else$
-$if(biblatex)$
-$if(bibcols)$
-\begin{multicols}{$bibcols$}[%
-        \section{$if(biblio-title)$$biblio-title$$else$readings$endif$}%
-        $if(bibnote)$\bibfont $bibnote$$endif$]
-\printbibliography[heading=none]
-\end{multicols}
-$else$
-\section{$if(biblio-title)$$biblio-title$$else$readings$endif$}
-$if(bibnote)$\bibfont $bibnote$$endif$
-\printbibliography[heading=none]
-$endif$
-$endif$
-$endif$
+    $if(bibcols)$
+    \begin{multicols}{$bibcols$}[%
+            \section{$if(biblio-title)$$biblio-title$$else$readings$endif$}%
+            $if(bibnote)$\bibfont $bibnote$$endif$]
+    \printbibliography[heading=none]
+    \end{multicols}
+    $else$
+    \section{$if(biblio-title)$$biblio-title$$else$readings$endif$}
+    $if(bibnote)$\bibfont $bibnote$$endif$
+    \printbibliography[heading=none]
+    $endif$ $-- if(bibcols)
+$endif$ $-- if(custom-bib)
 
 $if(thanks)$
-\vfill
+    \vfill
 
-\section{Acknowledgments}
-$thanks$
+    \section{Acknowledgments}
+    $thanks$
 $endif$
 
 $for(include-after)$

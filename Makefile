@@ -1,7 +1,6 @@
 # Usage
 #
 # make [syllabus]		# generate out/syllabus.pdf
-# make schedule			# generate out/schedule.html and copy to clipboard
 # make out/booklist.pdf		# generate out/booklist.pdf
 # make clean			# remove intermediate files
 # make reallyclean		# remove intermediate and output files
@@ -10,22 +9,17 @@
 
 # base for name of output .tex and .pdf files
 syllabus := syllabus
-# base for name of output .html file
-web := schedule
 
 # list of other markdown files to turn into standalone PDFs
 other_mds := booklist.md
 
-# markdown files compiled into $(web).html
-html_md := schedule-page.md 4schedule.md
-
 # other files to exclude from the syllabus
-EXCLUDE := README.md schedule-page.md $(other_mds)
+EXCLUDE := README.md $(other_mds)
 
 # list of markdown files (in order) for the syllabus sections
 # use the default only if all .md files in alphabetical order works for you
 syllabus_md := $(filter-out $(EXCLUDE),$(wildcard *.md))
-# syllabus configuration (normally just the one yaml file)
+# syllabus configuration
 syllabus_yaml := $(wildcard *.yaml)
 
 # Set to anything non-empty to suppress most of latex's messaging. To diagnose
@@ -45,17 +39,13 @@ always_latexmk :=
 xelatex := true
 
 # Extra options to pandoc (e.g. "-H mypreamble.tex")
-PANDOC_OPTIONS := --biblatex
+PANDOC_OPTIONS := --biblatex --top-level-division=section
 
 ## ---- special external files ----
 
 # Normally this does not need to be changed:
 # works if the template is local or in ~/.pandoc/templates
 SYLLABUS_TMPL := memoir-syllabus.latex
-HTML_TMPL := bib4ht.latex
-
-# clean4ht can come from the local directory or be installed somewhere in the PATH
-CLEAN4HT = $(shell which clean4ht || echo ./clean4ht)
 
 ## ---- subdirectories (normally, no need to change) ----
 
@@ -106,37 +96,17 @@ $(pdfs): %.pdf: %.tex
 	mv $(dir $<)$(temp_dir)/$(notdir $@) $@
 	rm -r $(dir $<)$(temp_dir)
 
-html := $(out_dir)/$(web).html
-html_tex := $(patsubst %.html,%.tex,$(html))
-
-$(html_tex): $(html_md) $(bib)
-	mkdir -p $(dir $@)
-	$(PANDOC) --template=$(HTML_TMPL) $(html_md) -o $@
-
-$(html): $(html_tex)
-	rm -rf $(dir $@)$(temp_dir)
-	mkdir -p $(out_dir)/$(temp_dir)
-	cp -f $< $(dir $@)$(temp_dir)
-	cd $(dir $@)$(temp_dir); latexmk -pdf- -ps- -dvi $(notdir $<)
-	cd $(dir $@)$(temp_dir); htlatex $(notdir $<) \
-	    ../../bib4ht.cfg " -cunihtf -utf8" "-cvalidate" \
-	    $(if $(latex_quiet),> /dev/null)
-	pandoc --filter $(CLEAN4HT) $(dir $@)$(temp_dir)/$(notdir $@) -o $@
-	rm -r $(dir $@)$(temp_dir)
-
-$(web): $(html)
-	pbcopy < $<
 
 # clean up everything except final pdf
 clean:
 	rm -rf $(out_dir)/$(temp_dir)
-	rm -f $(texs) $(syllabus_tex) $(html_tex)
+	rm -f $(texs) $(syllabus_tex)
 
 # clean up everything including pdfs
 reallyclean: clean
-	rm -f $(pdfs) $(html)
+	rm -f $(pdfs)
 	-rmdir $(out_dir)
 
-all: $(pdfs) $(html)
+all: $(pdfs)
 
 .DEFAULT_GOAL := $(syllabus_pdf)
