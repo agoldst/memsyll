@@ -7,40 +7,19 @@ course-info: |
     <profx@university.edu>  
     Office Hours: Backward Deep and Abysm of Time
 custom-title: false
-documentclass: memoir
-classoption:
-  - article
-  - oneside
-numbersections: false
 headers: true
 olhead: \textsc{th101}
 ochead: University of Stuff
 orhead: Fall 2016 oops 2024
 ocfoot: \thepage
 orfoot: Updated \today
-mainfont: Garamond Premier Pro
-mainfontoptions:
-- Numbers=OldStyle
-- BoldFont=Garamond Premier Pro Semibold
-- Ligatures=TeX
-fontsize: 12pt
-titlefont: Garamond Premier Pro Display
 hmargin: 1.25 in
 vmargin: 1 in
 tables: true
-biblatex: false
-biblatex-chicago: true
-biblatexoptions:
-    - notes
-    - noibid
-    - annotation
-    - short
-    - backend=biber
-    - bibannotesep=period
+chicago-ellipses: true
 bibliography: ../sources.bib
 bibcols: 2
 custom-bib: true
-chicago-ellipses: true
 thanks: |
     I thank the last five people who taught this course for their syllabuses.
 ...

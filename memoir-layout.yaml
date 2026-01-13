@@ -1,0 +1,14 @@
+---
+documentclass: memoir
+classoption:
+  - article
+  - oneside
+numbersections: false
+mainfont: Garamond Premier Pro
+mainfontoptions:
+- Numbers=OldStyle
+- BoldFont=Garamond Premier Pro Semibold
+- Ligatures=TeX
+fontsize: 12pt
+titlefont: Garamond Premier Pro Display
+...

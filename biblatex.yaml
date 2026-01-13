@@ -1,0 +1,11 @@
+---
+biblatex: false
+biblatex-chicago: true
+biblatexoptions:
+    - notes
+    - noibid
+    - annotation
+    - short
+    - backend=biber
+    - bibannotesep=period
+...
