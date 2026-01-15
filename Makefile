@@ -1,7 +1,6 @@
 # Usage
 #
 # make [syllabus]		# generate out/syllabus.pdf
-# make out/booklist.pdf		# generate out/booklist.pdf
 # make clean			# remove intermediate files
 # make reallyclean		# remove intermediate and output files
 
@@ -10,11 +9,8 @@
 # base for name of output .tex and .pdf files
 syllabus := syllabus
 
-# list of other markdown files to turn into standalone PDFs
-other_mds := booklist.md
-
-# other files to exclude from the syllabus
-EXCLUDE := README.md $(other_mds)
+# other markdown files to exclude from the syllabus
+EXCLUDE := README.md 
 
 # list of markdown files (in order) for the syllabus sections
 # use the default only if all .md files in alphabetical order works for you
@@ -22,15 +18,16 @@ syllabus_md := $(filter-out $(EXCLUDE),$(wildcard *.md))
 # syllabus configuration
 syllabus_yaml := $(wildcard *.yaml)
 
+# assume all local bib files will be used 
+syllabus_bib := $(wildcard *.bib)
+
 # Set to anything non-empty to suppress most of latex's messaging. To diagnose
 # LaTeX errors, you may want to do `make latex_quiet=""` to get verbose output
 latex_quiet := true
 
 # Set to anything non-empty to reprocess the TeX file every time we make the PDF.
-# Otherwise the former will be regenerated only when the source markdown
-# changes; in that case, if you change other dependencies (e.g. the
-# bibliography), use the -B option to make in order to force regeneration.
-# always_latexmk := true
+# Otherwise, TeX processing is trigged by changes to markdown, yaml, or bib files.
+# # always_latexmk := true
 always_latexmk := 
 
 # Set to anything non-empty to use xelatex rather than pdflatex. I always do
@@ -39,6 +36,9 @@ always_latexmk :=
 xelatex := true
 
 # Extra options to pandoc (e.g. "-H mypreamble.tex")
+# not that --biblatex is necessary to convert pandoc-style citations to biblatex
+# BUT the accompanying templates subsequently set biblatex: false to remove some default 
+# templating from pandoc which is undesirable
 PANDOC_OPTIONS := --biblatex --top-level-division=section
 
 ## ---- special external files ----
@@ -72,24 +72,15 @@ LATEXMK := latexmk $(if $(xelatex),-xelatex,-pdflatex="pdflatex %O %S") \
 syllabus_tex := $(out_dir)/$(syllabus).tex
 syllabus_pdf := $(out_dir)/$(syllabus).pdf
 
-texs := $(patsubst %.md,$(out_dir)/%.tex,$(other_mds))
-pdfs := $(patsubst %.md,$(out_dir)/%.pdf,$(other_mds)) $(syllabus_pdf)
-
 $(syllabus_tex): $(syllabus_yaml) $(syllabus_md)
 	mkdir -p $(dir $@)
 	$(PANDOC) --template=$(SYLLABUS_TMPL) -o $@ $^
 
-$(texs): $(out_dir)/%.tex: %.md
-	mkdir -p $(dir $@)
-	$(PANDOC) --template=$(SYLLABUS_TMPL) -o $@ $<
-
-phony_pdfs := $(if $(always_latexmk),$(pdfs))
-
 $(syllabus): $(syllabus_pdf)
 
-.PHONY: $(phony_pdfs) clean reallyclean all $(web) $(syllabus)
+.PHONY: $(if $(always_latexmk),$(syllabus_pdf)) clean reallyclean $(syllabus)
 
-$(pdfs): %.pdf: %.tex
+$(syllabus_pdf): $(syllabus_tex) $(syllabus_bib)
 	mkdir -p $(dir $@)
 	rm -rf $(dir $@)$(temp_dir)
 	cd $(dir $<); $(LATEXMK) $(notdir $<)
@@ -100,13 +91,11 @@ $(pdfs): %.pdf: %.tex
 # clean up everything except final pdf
 clean:
 	rm -rf $(out_dir)/$(temp_dir)
-	rm -f $(texs) $(syllabus_tex)
+	rm -f $(syllabus_tex)
 
 # clean up everything including pdfs
 reallyclean: clean
-	rm -f $(pdfs)
+	rm -f $(syllabus_pdf)
 	-rmdir $(out_dir)
-
-all: $(pdfs)
 
 .DEFAULT_GOAL := $(syllabus_pdf)
