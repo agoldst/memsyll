@@ -3,5 +3,8 @@
 # [@citations] into markdown suitable for further conversion for web. It's not
 # perfect by any means, but whose fault is that?
 
-pandoc --citeproc --csl memsyll.csl --bibliography sources.bib 4schedule.md -t markdown
+pandoc --csl memsyll.csl --bibliography sources.bib \
+    --lua-filter memsyll-cite.lua \
+    -t markdown-citations \
+    4schedule.md
 
