@@ -4128,7 +4128,7 @@
     </group>
   </macro>
   <citation disambiguate-add-givenname="true" disambiguate-add-names="true" et-al-min="3" et-al-use-first="1">
-    <layout delimiter="; " suffix=".">
+    <layout delimiter="; ">
       <!-- Shortened note styles mirror the filtering approach of author-date -->
       <group delimiter=", ">
         <choose>
