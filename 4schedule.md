@@ -7,7 +7,7 @@
 
 ## September 12
 
-- [@barnes:nightwood, 1--80].
+- [@barnes:nightwood, 1--80], or as far as you can get.
 
     - Focus on figuring out what it means.
 
@@ -18,7 +18,7 @@
 
 ## September 19
 
-- [@casanova:world, pt. 1].
+- [@casanova:world], pt. 1.
 
     - Response paper: consider the argument yourself, then write 250 words on why it is correct. If you disagree, change your mind.
 

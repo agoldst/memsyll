@@ -39,11 +39,12 @@ end
 
 -- cleanup CSL's mess when it comes to closing punctuation
 -- by looking for periods following a citation closing with a period or comma
--- and removing them. It's not elegant but I think it works okay
+-- and moving them i. It's not elegant but I think it works okay
 
-local quote = lpeg.S("\"'”’") -- curly & straight
-local close_punct = lpeg.S(",.") * quote^0 * -1 -- [,.]["'”’]*$
-local cleanup_pat = (1 - close_punct)^0 * close_punct -- complete pattern
+local close_quote = lpeg.S("\"'”’") -- curly or straight
+local close_punct = lpeg.S(",.") * -1 -- [,.]$
+-- pattern to check for: a terminal close-quote
+local cleanup_pat = (1 - close_quote * -1)^0 * close_quote * -1
 
 local function cleanup_postcite (il)
     for i = #il, 1, -1 do
@@ -51,7 +52,31 @@ local function cleanup_postcite (il)
             if cleanup_pat:match(pandoc.utils.stringify(il[i])) and
                 il[i + 1].t == "Str" and
                 close_punct:match(il[i + 1].text) then
-                il:remove(i + 1)
+
+-- a Cite always has Inlines for content, but these can themselves be nested,
+-- so we must go all the way to the right and descend until we hit text
+                local parent = il[i].content
+                local target = parent[#parent]
+                while target and not target.text do
+                    logging.temp("parent: ", parent)
+                    logging.temp("target: ", target)
+
+                    if pandoc.utils.type(target) == "Inlines" then
+                        parent = target
+                        target = target[#target]
+                    else
+                        parent = target
+                        target = target.content
+                    end
+                end
+
+-- then we can take our punctuation and stick it before the close quote(s)
+                local postcite = il:remove(i + 1)
+                local ins = #parent
+                while ins > 0 and not close_quote:match(parent[ins].text) do
+                    ins = ins - 1
+                end
+                parent:insert(ins, postcite)
             end
         end
     end
@@ -77,12 +102,16 @@ function Pandoc(doc)
     end
 
     -- call citeproc so we can then munge the results
-    local citeproc_result = pandoc.utils.citeproc(doc)
+    doc = pandoc.utils.citeproc(doc)
 
     -- now put the urls in
-    return citeproc_result:walk {
-        Inlines = cleanup_postcite,
+    doc = doc:walk {
+        Inlines = cleanup_postcite
+    }
+    doc = doc:walk {
         Cite = add_links
     }
+
+    return doc
 end
 
