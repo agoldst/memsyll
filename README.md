@@ -11,11 +11,11 @@ In order not to clutter up the main directory with TeX's many auxiliary files, o
 
 ## HTML version
 
-I always want an HTML version of the reading schedule as well. Working from markdown should make that simple enough, but citations are an enduring difficulty. I have given up on my old complicated solution with tex4ht and pandoc filters. Instead, I supply a hacked [CSL style](memsyll.csl) and a [Lua filter](memsyll-cite.lua) which I use to turn the syllabus into a webpage (with a command line like in [citeproc.sh](citeproc.sh)). The filter does a little munging on pandoc's citeproc output, but the result still needs hand-correcting. As ever, a nice PDF and a nice webpage can never **quite** be produced automatically from the same minimal source no matter how much complex templating you use.
+I always want an HTML version of the reading schedule as well. Working from markdown should make that simple enough, but citations are an enduring difficulty. I have given up on my old complicated solution with tex4ht and pandoc filters. Instead, I supply a hacked [CSL style](memsyll.csl) and a [Lua filter](memsyll-cite.lua) which I use to turn the syllabus into a webpage (with a command line like in [citeproc.sh](citeproc.sh)). The filter does a little munging on pandoc's citeproc output, making citations carrying URLs into hyperlinks and trying to clean up the placement of periods and commas where citeproc seems to fail, but the result will likely need hand-correcting. As ever, a nice PDF and a nice webpage can never **quite** be produced automatically from the same minimal source no matter how much complex templating you use.
 
 ## Installation
 
-Clone the repository. The `*.latex` template files can stay in the folder with the syllabus or be moved to `~/.pandoc/templates`. If you use the CSL and accompanying Lua filter, those have to be findable for pandoc as well.
+Clone the repository. The `*.latex` template files can stay in the folder with the syllabus or be moved to `~/.pandoc/templates`. If you use the CSL and accompanying Lua filter, those have to be findable for pandoc as well (I put them in `~/.pandoc/csl` and `~/.pandoc/filters`).
 
 ## More details on settings and options
 
