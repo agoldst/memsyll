@@ -13,7 +13,7 @@
     TODO fix bad handling of multicites like [@cite1, @cite2]
 ]]
 
-local logging = require "logging"
+-- local logging = require "logging"
 
 -- table of ids of references to add links to
 local to_link = { }
@@ -101,7 +101,7 @@ otherwise:
                             if rnode then
                                 return rnode, rloc
                             else
-                                return traversal(node[ins - 1], node)
+                                ins = ins - 1
                             end
                         end
                     else -- generic case: node must be a container
