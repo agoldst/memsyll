@@ -43,9 +43,11 @@ local function add_links(cite)
     end
 end
 
--- cleanup CSL's mess when it comes to closing punctuation
--- by looking for periods following a citation closing with a period or comma
--- and moving them i. It's not elegant but I think it works okay
+--[[
+cleanup CSL's mess when it comes to closing punctuation.
+
+Filter all Inlines by looking for a period or comma following a citation closing in quotation marks and moving it inside. It's not elegant but I think it works okay.
+--]]
 
 local close_quote = lpeg.S("\"'”’") -- curly or straight
 local close_punct = lpeg.S(",.") * -1 -- [,.]$
