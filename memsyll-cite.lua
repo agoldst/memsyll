@@ -46,7 +46,9 @@ end
 --[[
 cleanup CSL's mess when it comes to closing punctuation.
 
-Filter all Inlines by looking for a period or comma following a citation closing in quotation marks and moving it inside. It's not elegant but I think it works okay.
+Filter all Inlines by looking for a period or comma following a citation
+closing in quotation marks and moving it inside. It's not elegant but I think
+it works okay.
 --]]
 
 local close_quote = lpeg.S("\"'”’") -- curly or straight
@@ -65,9 +67,9 @@ local function cleanup_postcite (il)
 
 --[[
 
-a Cite always has Inlines for content, but these can themselves be nested,
-so we have to traverse the tree to check where our innermost close-quote
-really lives.
+a Cite always has Inlines for content, but these can themselves be nested, so
+we have to traverse the tree to check where our innermost close-quote really
+lives.
 
 We start by setting `node` to the content of the Cite. Then:
 
@@ -156,10 +158,11 @@ function Pandoc(doc)
     -- call citeproc so we can then munge the results
     doc = pandoc.utils.citeproc(doc)
 
-    -- now put the urls in
+    -- get those closing periods and commas where they belong on citations
     doc = doc:walk {
         Inlines = cleanup_postcite
     }
+    -- now put the urls in
     doc = doc:walk {
         Cite = add_links
     }
