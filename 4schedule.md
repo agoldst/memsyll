@@ -35,3 +35,7 @@
 ## October 3
 
 - [@anand:untouchable]. This one's a good one.
+
+## October 10
+
+- [@lizardo-skiles:reconceptualizing2012]. What, you thought this was a literature class?
