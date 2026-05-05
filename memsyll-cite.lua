@@ -44,39 +44,83 @@ end
 local close_quote = lpeg.S("\"'”’") -- curly or straight
 local close_punct = lpeg.S(",.") * -1 -- [,.]$
 -- pattern to check for: a terminal close-quote
-local cleanup_pat = (1 - close_quote * -1)^0 * close_quote * -1
+local cleanup_pat = (1 - close_quote^1 * -1)^0 * lpeg.C(close_quote^1) * -1
 
 local function cleanup_postcite (il)
     for i = #il, 1, -1 do
-        if il[i].t == "Cite" and il[i + 1] then
-            if cleanup_pat:match(pandoc.utils.stringify(il[i])) and
-                il[i + 1].t == "Str" and
-                close_punct:match(il[i + 1].text) then
+        if il[i].t == "Cite" and il[i + 1] and il[i + 1].t == "Str" and
+            close_punct:match(il[i + 1].text) then
+            local qmatch = cleanup_pat:match(pandoc.utils.stringify(il[i]))
 
--- a Cite always has Inlines for content, but these can themselves be nested,
--- so we must go all the way to the right and descend until we hit text
-                local parent = il[i].content
-                local target = parent[#parent]
-                while target and not target.text do
-                    logging.temp("parent: ", parent)
-                    logging.temp("target: ", target)
+            if qmatch then
+                local qq = utf8.len(qmatch) -- error-check counter
 
-                    if pandoc.utils.type(target) == "Inlines" then
-                        parent = target
-                        target = target[#target]
-                    else
-                        parent = target
-                        target = target.content
+--[[
+
+a Cite always has Inlines for content, but these can themselves be nested,
+so we have to traverse the tree to check where our innermost close-quote
+really lives.
+
+We start by setting `node` to the content of the Cite. Then:
+
+node is a Str:
+    is it a close quote? then we're not done, we need to look one element to the left
+    is it some other string? then we're done, remember where we are and put closing punct after it
+
+node is a list of Inlines:
+    starting from the right, recurse on its elements
+
+otherwise:
+    node is a container, repeat on its content
+
+---]]
+
+                local function traversal (node, parent)
+                    if not node then
+                        io.stderr:write(
+                "Error in punctuation cleanup: fell off the tree. Giving up.\n")
+                        return nil, nil
+                    end
+
+                    if node.t == "Str" then
+                        -- leaf case: we're looking for the first non-quote Str
+                        local test = close_quote:match(node.text)
+                        if (test) then
+                            qq = qq - 1
+                            return nil, nil
+                        else
+                            local _, result  = parent:find(node)
+                            return parent, result + 1
+                        end
+                    elseif pandoc.utils.type(node) == "Inlines" then
+                        local ins = #node
+                        while ins > 0 do
+                            -- it's not a tail recursion, what do you want
+                            local rnode, rloc = traversal(node[ins], node)
+
+                            if rnode then
+                                return rnode, rloc
+                            else
+                                return traversal(node[ins - 1], node)
+                            end
+                        end
+                    else -- generic case: node must be a container
+                        return traversal(node.content, node)
                     end
                 end
 
--- then we can take our punctuation and stick it before the close quote(s)
-                local postcite = il:remove(i + 1)
-                local ins = #parent
-                while ins > 0 and not close_quote:match(parent[ins].text) do
-                    ins = ins - 1
+                local target, loc = traversal(il[i].content, il[i])
+
+                if (qq > 0) then
+                    io.stderr:write(
+            "Error in punctuation cleanup: missed a quote mark. Giving up.\n")
+                elseif not target then
+                    io.stderr:write(
+                "Error in punctuation cleanup: fell off the tree. Giving up.\n")
+                else
+                    target:insert(loc, il:remove(i + 1))
                 end
-                parent:insert(ins, postcite)
+
             end
         end
     end
