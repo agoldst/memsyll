@@ -2,13 +2,19 @@
     memsyll-cite.lua: run citeproc, modify output for better web-ready markdown
     Andrew Goldstone, 2026
 
-    This filter simply creates hyperlinked citations where bibliography entries
-    have URLs, which CSL alone cannot do.
+    See citeproc.sh for example usage. This filter does two chores:
+
+    1. Create hyperlinked citations where bibliography entries
+    have URLs, which CSL alone apparently cannot do.
 
     N.B. the output format on the command line must be explicitly -citations,
     otherwise citeproc is no-op.
 
-    See citeproc.sh for example usage.
+    2. Clean up punctuation when a citation ends with quotation marks and is
+    followed by a period or comma. I like to see that punctuation moved inside
+    the quotation marks (Chicago style), but again citeproc/CSL seem to fail.
+
+    Known issues:
 
     TODO fix bad handling of multicites like [@cite1, @cite2]
 ]]
