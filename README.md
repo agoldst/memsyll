@@ -1,3 +1,6 @@
+N.B. No further updates here. I am in the process of migrating off github. See [codeberg.org/agoldst/memsyll](https://codeberg.org/agoldst/memsyll).
+—AG, November 17, 2026.
+
 # A pandoc template for typesetting a course syllabus
 
 This repository gives a setup for generating a syllabus in PDF from source files in markdown (pandoc's variant) and a bibliographic database in biblatex format. The typesetting and layout are governed by a supplied [pandoc template](memoir-syllabus.latex), which has some options that can be tweaked via template variables. The PDF generation process is automated with the included [Makefile](Makefile). `make` will join together almost all `.md`  and `.yaml` files in the directory and generate `out/syllabus.pdf` (on my system it comes out [like this](https://andrewgoldstone.com/memsyll/syllabus.pdf)).
